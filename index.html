@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Social Media Content Calendar</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f3f4ff;
+    color: #222;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+header {
+    background: linear-gradient(135deg, #5b4bdb, #a044ff);
+    color: white;
+    text-align: center;
+    padding: 25px 15px;
+    border-radius: 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000010;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 7px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button {
+    background: #635bdf;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #4438b8;
+}
+
+.post {
+    background: #f8f7ff;
+    border-left: 5px solid #635bdf;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 7px;
+    overflow-wrap: anywhere;
+}
+
+.post h3 {
+    color: #5145cd;
+}
+
+.small {
+    color: #666;
+    font-size: 13px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>📅 AI Social Media Planner</h1>
+    <p>Create your social media content calendar easily!</p>
+</header>
+
+<div class="card">
+    <h2>Create Content Plan</h2>
+
+    <label for="business">Business or Page Name</label>
+    <input type="text" id="business"
+           placeholder="Example: Fashion Store">
+
+    <label for="platform">Social Media Platform</label>
+    <select id="platform">
+        <option>Instagram</option>
+        <option>Facebook</option>
+        <option>YouTube</option>
+        <option>LinkedIn</option>
+        <option>X (Twitter)</option>
+    </select>
+
+    <label for="topic">Content Topic</label>
+    <input type="text" id="topic"
+           placeholder="Example: Digital Marketing">
+
+    <label for="goal">Main Goal</label>
+    <select id="goal">
+        <option>Increase Engagement</option>
+        <option>Promote Products</option>
+        <option>Increase Followers</option>
+        <option>Educate Audience</option>
+        <option>Increase Sales</option>
+    </select>
+
+    <label for="days">Number of Days</label>
+    <select id="days">
+        <option value="7">7 Days</option>
+        <option value="14">14 Days</option>
+        <option value="30">30 Days</option>
+    </select>
+
+    <button onclick="generateCalendar()">
+        Generate Content Calendar
+    </button>
+</div>
+
+<div class="card">
+    <h2>📋 Your Content Calendar</h2>
+    <div id="result">
+        <p class="small">
+            Fill in the details and generate your content plan.
+        </p>
+    </div>
+
+    <button id="downloadBtn" onclick="downloadCalendar()"
+            style="display:none;">
+        Download Calendar
+    </button>
+</div>
+
+<footer>
+    <p>AI Social Media Content Calendar Generator</p>
+    <p>Project by G Dharshini</p>
+</footer>
+
+</div>
+
+<script>
+let calendarText = "";
+
+const contentIdeas = [
+    "Introduction and welcome post",
+    "Share useful tips with your audience",
+    "Create a frequently asked questions post",
+    "Share a motivational message",
+    "Post an educational carousel idea",
+    "Share a behind-the-scenes story",
+    "Create a poll or audience question",
+    "Highlight a product or service",
+    "Share an interesting fact",
+    "Create a step-by-step tutorial",
+    "Share customer feedback or a testimonial",
+    "Post a common mistake and its solution",
+    "Create a myth versus fact post",
+    "Share a weekly summary",
+    "Ask followers to share their opinions"
+];
+
+function generateCalendar() {
+    const business =
+        document.getElementById("business").value.trim();
+
+    const platform =
+        document.getElementById("platform").value;
+
+    const topic =
+        document.getElementById("topic").value.trim();
+
+    const goal =
+        document.getElementById("goal").value;
+
+    const days =
+        Number(document.getElementById("days").value);
+
+    if (!business || !topic) {
+        alert("Please enter your page name and content topic.");
+        return;
+    }
+
+    let html = "";
+    calendarText = "SOCIAL MEDIA CONTENT CALENDAR\n\n";
+    calendarText += "Page: " + business + "\n";
+    calendarText += "Platform: " + platform + "\n";
+    calendarText += "Topic: " + topic + "\n";
+    calendarText += "Goal: " + goal + "\n\n";
+
+    const hashtags = topic
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(word => "#" + word.replace(/[^\w]/g, ""))
+        .join(" ");
+
+    for (let i = 0; i < days; i++) {
+        const idea = contentIdeas[i % contentIdeas.length];
+        const day = i + 1;
+
+        const caption =
+            idea + " about " + topic +
+            ". Follow " + business +
+            " for more useful updates!";
+
+        html += `
+            <div class="post">
+                <h3>Day ${day}</h3>
+                <p><strong>Platform:</strong> ${escapeHTML(platform)}</p>
+                <p><strong>Content Idea:</strong>
+                    ${escapeHTML(idea)}</p>
+                <p><strong>Topic:</strong>
+                    ${escapeHTML(topic)}</p>
+                <p><strong>Caption:</strong>
+                    ${escapeHTML(caption)}</p>
+                <p><strong>Hashtags:</strong>
+                    ${escapeHTML(hashtags)} #SocialMedia</p>
+                <p><strong>Goal:</strong>
+                    ${escapeHTML(goal)}</p>
+            </div>
+        `;
+
+        calendarText +=
+            "Day " + day + "\n" +
+            "Platform: " + platform + "\n" +
+            "Idea: " + idea + "\n" +
+            "Topic: " + topic + "\n" +
+            "Caption: " + caption + "\n" +
+            "Hashtags: " + hashtags + " #SocialMedia\n" +
+            "Goal: " + goal + "\n\n";
+    }
+
+    document.getElementById("result").innerHTML = html;
+
+    document.getElementById("downloadBtn").style.display =
+        "inline-block";
+}
+
+function escapeHTML(value) {
+    return value.replace(/[&<>"']/g, function(character) {
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        };
+        return entities[character];
+    });
+}
+
+function downloadCalendar() {
+    const blob = new Blob(
+        [calendarText],
+        { type: "text/plain;charset=utf-8" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "social_media_calendar.txt";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
